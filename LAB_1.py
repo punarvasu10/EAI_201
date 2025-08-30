@@ -1,5 +1,3 @@
-# Vacuum Cleaner Program
-
 def dust_mode(entry):
     if entry == 1:
         print("Normal Mode ON (for everyday dust).")

@@ -1,0 +1,34 @@
+Choose Vacuum Shape:
+1. Circle
+2. Square
+3. Triangle
+4. Rectangle
+Enter shape (1/2/3/4): 1
+
+Select Dust Type:
+1. Normal Dust
+2. Small Crystals/Rocks
+3. Hard Things
+Enter type (1/2/3): 2
+ Power Mode ON (for small crystals/rocks).
+
+--- Circle Vacuum Cleaner ---
+Type 'start' to begin cleaning: START
+ Circle Vacuum Started Cleaning!
+
+Commands: left | right | dock | stop
+Enter your command: LEFT
+ Turning Left...
+
+Commands: left | right | dock | stop
+Enter your command: RIGHT
+ Turning Right...
+
+Commands: left | right | dock | stop
+Enter your command: DOCK
+ Returning to Dock...
+
+Commands: left | right | dock | stop
+Enter your command: STOP
+ Stopping the process
+ 
