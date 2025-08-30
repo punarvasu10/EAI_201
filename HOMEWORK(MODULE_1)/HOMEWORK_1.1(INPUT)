@@ -1,0 +1,24 @@
+from browser_use_sdk import BrowserUse
+
+# Initialize client with your API key
+client = BrowserUse(api_key="your_api_key_here")
+
+# Define the browser automation task
+task = """
+You need to perform the following browser automation task:
+
+1. Open https://en.wikipedia.org/wiki/Engineering_mechanics in the browser.
+2. Scroll down and click on 'Statics' section.
+3. From there, follow the link to 'Newton's laws of motion'.
+4. Then navigate to 'Equilibrium' subsection.
+5. After that, click on the 'Rigid body' link.
+6. Finally, follow the link to 'Force (physics)'.
+
+Make sure the steps are executed in order and provide a summary of what happened after each step.
+"""
+
+# Execute the task
+result = client.tasks.run(task=task)
+
+# Print the plain-text summary output
+print(result.done_output)
