@@ -1,0 +1,27 @@
+Hi this is AI Student Grading Assistant 
+Enter the number of subjects: 6
+Enter Name of Subject 1 : DSA
+Enter marks for Dsa (0–100): 75
+Enter Name of Subject 2 : ENGINEERING MATHEMATICS
+Enter marks for Engineering Mathematics (0–100): 90
+Enter Name of Subject 3 : DISCRETE MATHEMATICS
+Enter marks for Discrete Mathematics (0–100): 87
+Enter Name of Subject 4 : GERMAN
+Enter marks for German (0–100): 100
+Enter Name of Subject 5 : INTRO TO AI AND ML
+Enter marks for Intro To Ai And Ml (0–100): 70
+Enter Name of Subject 6 : AEC
+Enter marks for Aec (0–100): 85
+
+Student Report Card
+Dsa: 75.0/100
+Engineering Mathematics: 90.0/100
+Discrete Mathematics: 87.0/100
+German: 100.0/100
+Intro To Ai And Ml: 70.0/100
+Aec: 85.0/100
+
+Total Marks: 507.0
+Average: 84.50
+Final Grade: A (Excellent)
+ Excellent work! Maintain this consistency.
