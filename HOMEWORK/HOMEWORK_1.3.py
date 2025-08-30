@@ -26,4 +26,3 @@ plt.ylabel("Y values")
 plt.title("Linear Regression using TensorFlow")
 plt.legend()
 plt.show()
-                                                                                                                                                                      
