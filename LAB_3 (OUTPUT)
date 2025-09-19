@@ -1,11 +1,47 @@
-Greedy BFS with Manhattan: No path found
+Greedy (manhattan)
+Path length: 5 | Nodes Explored: 4
+S0000
+1*101
+06*10
+101*1
+0000G
 
-Greedy BFS with Euclidean: No path found
+A* (manhattan)
+Path length: 5 | Nodes Explored: 4
+S0000
+1*101
+06*10
+101*1
+0000G
 
-Greedy BFS with Diagonal: No path found
+Greedy (euclidean)
+Path length: 5 | Nodes Explored: 4
+S0000
+1*101
+06*10
+101*1
+0000G
 
-A* with Manhattan: No path found       
+A* (euclidean)
+Path length: 5 | Nodes Explored: 4
+S0000
+1*101
+06*10
+101*1
+0000G
 
-A* with Euclidean: No path found       
+Greedy (diagonal)
+Path length: 5 | Nodes Explored: 4
+S0000
+1*101
+06*10
+101*1
+0000G
 
-A* with Diagonal: No path found
+A* (diagonal)
+Path length: 5 | Nodes Explored: 5
+S0000
+1*101
+06*10
+101*1
+0000G

@@ -1,121 +1,139 @@
-import heapq
 import math
-import time
+import heapq
 
-grid = [
-    ['S', 0, 0, 1, 0],
-    [1, 1, 0, 1, 'G'],
-    [0, 5, 0, 1, 0],
-    [1, 1, 0, 1, 1],
-    [0, 0, 0, 0, 0]
-]
-
-rows, cols = len(grid), len(grid[0])
-
-# Locate Start & Goal
-for i in range(rows):
-    for j in range(cols):
-        if grid[i][j] == 'S':
-            start = (i, j)
-        elif grid[i][j] == 'G':
-            goal = (i, j)
-# Heuristics
-def manhattan(a, b):
-    return abs(a[0] - b[0]) + abs(a[1] - b[1])
-
+# Euclidean heuristic
 def euclidean(a, b):
     return math.sqrt((a[0] - b[0])**2 + (a[1] - b[1])**2)
 
-def diagonal(a, b):
-    return max(abs(a[0] - b[0]), abs(a[1] - b[1]))
+# Heuristic options
+def get_heuristic(a, b, method):
+    dx = abs(a[0] - b[0])
+    dy = abs(a[1] - b[1])
+    if method == "manhattan":
+        return dx + dy
+    if method == "euclidean":
+        return euclidean(a, b)
+    if method == "diagonal":
+        return max(dx, dy)
+    return 0
 
-# Cost function (ghost zones)
-def cost(x, y):
-    if grid[x][y] == 5:  
-        return 5
-    return 1
+# Parse grid string
+def setup_grid(grid_str):
+    grid = [list(row) for row in grid_str.strip().split('/')]
+    start = goal = None
+    for i, row in enumerate(grid):
+        for j, cell in enumerate(row):
+            if cell == "S":
+                start = (i, j)
+            elif cell == "G":
+                goal = (i, j)
+    return grid, start, goal
 
-# Neighbor function (4 or 8 moves)
-def neighbors(node, allow_diagonal=True):
-    x, y = node
-    directions = [(1,0), (-1,0), (0,1), (0,-1)]
-    if allow_diagonal:
-        directions += [(1,1), (1,-1), (-1,1), (-1,-1)]
-    for dx, dy in directions:
-        nx, ny = x + dx, y + dy
-        if 0 <= nx < rows and 0 <= ny < cols and grid[nx][ny] != 1:
-            yield (nx, ny)
+# Neighbor generation (8 directions)
+def neighbors(pos, grid):
+    moves = [(-1,0),(1,0),(0,-1),(0,1),(-1,-1),(1,1),(-1,1),(1,-1)]
+    res = []
+    for dx, dy in moves:
+        x, y = pos[0]+dx, pos[1]+dy
+        if 0 <= x < len(grid) and 0 <= y < len(grid[0]) and grid[x][y] != '1':
+            res.append((x,y))
+    return res
 
-# Path reconstruction
-def reconstruct_path(parent, start, goal):
+# Step cost
+def step_cost(current, neighbor, grid):
+    x, y = neighbor
+    diag = abs(current[0]-neighbor[0]) + abs(current[1]-neighbor[1]) == 2
+    base_cost = math.sqrt(2) if diag else 1
+    if grid[x][y] == '6':  # Ghost zone penalty
+        return base_cost + 5
+    return base_cost
+
+# Path retrace
+def retrace(came_from, end, start):
+    if end not in came_from:
+        return []
     path = []
-    node = goal
-    while node != start:
-        path.append(node)
-        node = parent[node]
+    curr = end
+    while curr != start:
+        path.append(curr)
+        curr = came_from[curr]
     path.append(start)
     return path[::-1]
 
 # Greedy Best-First Search
-def greedy_bfs(start, goal, heuristic):
-    frontier = [(heuristic(start, goal), start)]
-    visited = set([start])
-    parent = {}
-    explored = 0
-    while frontier:
-        _, node = heapq.heappop(frontier)
-        explored += 1
-        if node == goal:
-            return reconstruct_path(parent, start, goal), explored
-        for nb in neighbors(node, allow_diagonal=True):
-            if nb not in visited:
-                visited.add(nb)
-                parent[nb] = node
-                heapq.heappush(frontier, (heuristic(nb, goal), nb))
-    return None, explored
-# A* Search
-def astar(start, goal, heuristic):
-    frontier = [(heuristic(start, goal), 0, start)]
-    visited = {}
-    parent = {}
-    explored = 0
-    while frontier:
-        f, g, node = heapq.heappop(frontier)
-        explored += 1
-        if node == goal:
-            return reconstruct_path(parent, start, goal), explored
-        if node in visited and visited[node] <= g:
+def greedy(grid, start, goal, method):
+    queue = []
+    heapq.heappush(queue, (get_heuristic(start, goal, method), start))
+    came_from = {start: None}
+    explored = set()
+    while queue:
+        _, pos = heapq.heappop(queue)
+        if pos == goal:
+            break
+        if pos in explored:
             continue
-        visited[node] = g
-        for nb in neighbors(node, allow_diagonal=True):
-            new_g = g + cost(*nb)
-            heapq.heappush(frontier, (new_g + heuristic(nb, goal), new_g, nb))
-            parent[nb] = node
-    return None, explored
+        explored.add(pos)
+        for neigh in neighbors(pos, grid):
+            if neigh not in came_from:
+                heapq.heappush(queue, (get_heuristic(neigh, goal, method), neigh))
+                came_from[neigh] = pos
+    path = retrace(came_from, goal, start)
+    return path, len(explored)
 
-# Visualization
-def print_path(path):
-    temp = [[str(cell) for cell in row] for row in grid]
-    if path:
-        for (x,y) in path:
-            if temp[x][y] not in ('S','G'):
-                temp[x][y] = '*'
-    for row in temp:
-        print(" ".join(row))
+# A* Search
+def astar(grid, start, goal, method):
+    queue = []
+    heapq.heappush(queue, (get_heuristic(start, goal, method), start))
+    came_from = {start: None}
+    cost_so_far = {start: 0}
+    explored = set()
+    while queue:
+        _, pos = heapq.heappop(queue)
+        if pos == goal:
+            break
+        if pos in explored:
+            continue
+        explored.add(pos)
+        for neigh in neighbors(pos, grid):
+            new_cost = cost_so_far[pos] + step_cost(pos, neigh, grid)
+            if neigh not in cost_so_far or new_cost < cost_so_far[neigh]:
+                cost_so_far[neigh] = new_cost
+                priority = new_cost + get_heuristic(neigh, goal, method)
+                heapq.heappush(queue, (priority, neigh))
+                came_from[neigh] = pos
+    path = retrace(came_from, goal, start)
+    return path, len(explored)
+
+# Print path visually
+def print_path(grid, path):
+    view = [row[:] for row in grid]
+    for x, y in path:
+        if view[x][y] not in ('S','G'):
+            view[x][y] = '*'
+    for row in view:
+        print("".join(row))
     print()
 
-# Run experiments
-for algo, func in [("Greedy BFS", greedy_bfs), ("A*", astar)]:
-    for hname, hfunc in [("Manhattan", manhattan), ("Euclidean", euclidean), ("Diagonal", diagonal)]:
-        start_time = time.time()
-        path, explored = func(start, goal, hfunc)
-        end_time = time.time()
+# Main
+def main(grid_str):
+    grid, start, goal = setup_grid(grid_str)
+    heuristics = ["manhattan", "euclidean", "diagonal"]
+    for h in heuristics:
+        print(f"Greedy ({h})")
+        path, nodes = greedy(grid, start, goal, h)
         if path:
-            print(f"{algo} with {hname}:")
-            print(f"  Path length = {len(path)}")
-            print(f"  Nodes explored = {explored}")
-            print(f"  Execution time = {end_time - start_time:.6f} sec")
-            print("  Path visualization:")
-            print_path(path)
+            print(f"Path length: {len(path)} | Nodes Explored: {nodes}")
+            print_path(grid, path)
         else:
-            print(f"{algo} with {hname}: No path found\n")
+            print("No path found\n")
+
+        print(f"A* ({h})")
+        path, nodes = astar(grid, start, goal, h)
+        if path:
+            print(f"Path length: {len(path)} | Nodes Explored: {nodes}")
+            print_path(grid, path)
+        else:
+            print("No path found\n")
+
+# Run with sample grid
+main("S0000/10101/06010/10101/0000G")
