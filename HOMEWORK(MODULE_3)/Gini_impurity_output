@@ -1,0 +1,28 @@
+Dataset:
+Student 1: 2 hours → Fail
+Student 2: 4 hours → Fail
+Student 3: 6 hours → Pass
+Student 4: 8 hours → Pass
+Student 5: 10 hours → Pass
+
+Step 1: Possible splits: [3, 5, 7, 9]
+
+Step 2: Calculate Gini impurity for each split
+Split at 3: Left=[0], Right=[0, 1, 1, 1], Weighted Gini=0.300
+Split at 5: Left=[0, 0], Right=[1, 1, 1], Weighted Gini=0.000
+Split at 7: Left=[0, 0, 1], Right=[1, 1], Weighted Gini=0.267
+Split at 9: Left=[0, 0, 1, 1], Right=[1], Weighted Gini=0.400
+
+Best Split is at: 5 with Gini: 0.0
+
+Decision Tree:
+If Study Hours ≤ 5 → Predict: Fail (0)
+If Study Hours > 5 → Predict: Pass (1)
+
+Predictions:
+Study 1 hours → Fail
+Study 3 hours → Fail
+Study 5 hours → Fail
+Study 7 hours → Pass
+Study 9 hours → Pass
+Study 11 hours → Pass
