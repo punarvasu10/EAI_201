@@ -1,0 +1,21 @@
+Root Node - Mean Price: 150.0, Variance: 520.0
+area <= 1300.0: Weighted Variance = 295.00
+area <= 1500.0: Weighted Variance = 370.00
+area <= 1650.0: Weighted Variance = 103.33
+area <= 1775.0: Weighted Variance = 420.00
+rooms <= 3.5: Weighted Variance = 103.33
+rooms <= 4.5: Weighted Variance = 295.00
+distance <= 2.5: Weighted Variance = 295.00
+distance <= 3.5: Weighted Variance = 370.00
+distance <= 4.5: Weighted Variance = 103.33
+distance <= 6.5: Weighted Variance = 420.00
+age <= 5.0: Weighted Variance = 520.00
+age <= 8.5: Weighted Variance = 453.33
+age <= 12.5: Weighted Variance = 503.33
+age <= 17.5: Weighted Variance = 420.00
+
+Best Split: area <= 1650.0
+Variance Reduction: 416.7
+
+Left Group: [120, 150, 130]
+Right Group: [180, 170]
